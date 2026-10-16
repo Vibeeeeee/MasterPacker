@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTH
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  passwordHash  String
+  isAdmin       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// TAG SYSTEM
+// ============================================
+
+model TagClass {
+  id        String    @id @default(cuid())
+  name      String
+  color     String    @default("#808080")
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tags      Tag[]
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String
+  tagClassId  String?
+  tagClass    TagClass? @relation(fields: [tagClassId], references: [id])
+  color       String    @default("#808080")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  itemTags    ItemTag[]
+  boxTags     BoxTag[]
+  @@index([name])
+}
+
+// ============================================
+// CUSTOM ATTRIBUTES
+// ============================================
+
+model Attribute {
+  id           String   @id @default(cuid())
+  name         String
+  type         String   @default("TEXT") // TEXT, NUMBER, BOOLEAN, DATE, SELECT
+  options      String?  // For SELECT type: comma-separated values
+  isVisible    Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  itemValues   ItemAttribute[]
+}
+
+model ItemAttribute {
+  itemId      String
+  item        Item           @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  attributeId String
+  attribute   Attribute      @relation(fields: [attributeId], references: [id])
+  value       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  @@id([itemId, attributeId])
+}
+
+// ============================================
+// ITEMS
+// ============================================
+
+model Item {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  markForReorder  Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  tags            ItemTag[]
+  attributes      ItemAttribute[]
+  pictures        ItemPicture[]
+  boxItems        BoxItem[]
+}
+
+model ItemTag {
+  itemId  String
+  item    Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  tagId   String
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@id([itemId, tagId])
+}
+
+model ItemPicture {
+  id        String    @id @default(cuid())
+  itemId    String
+  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  data      Bytes     // BLOB for image data
+  mimeType  String    // e.g., "image/jpeg"
+  filename  String?
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+}
+
+// ============================================
+// BOXES (Nested)
+// ============================================
+
+model Box {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  parentBoxId String?
+  parentBox   Box?      @relation("BoxHierarchy", fields: [parentBoxId], references: [id])
+  childBoxes  Box[]     @relation("BoxHierarchy")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tags        BoxTag[]
+  pictures    BoxPicture[]
+  boxItems    BoxItem[]
+}
+
+model BoxItem {
+  boxId      String
+  box        Box      @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  quantity   Int      @default(1)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  @@id([boxId, itemId])
+}
+
+model BoxTag {
+  boxId   String
+  box     Box      @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  tagId   String
+  tag     Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@id([boxId, tagId])
+}
+
+model BoxPicture {
+  id        String   @id @default(cuid())
+  boxId     String
+  box       Box      @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  data      Bytes
+  mimeType  String
+  filename  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// SNAPSHOTS (Versioning)
+// ============================================
+
+model Snapshot {
+  id        String   @id @default(cuid())
+  filename  String   // e.g., "2024-10-16_12-00-00.db"
+  path      String   // Relative path to snapshot file
+  size      Int      // File size in bytes
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// APP CONFIG
+// ============================================
+
+model AppConfig {
+  id                     String   @id @default("default")
+  autoSnapshotInterval   Int      @default(24)    // hours
+  maxSnapshots           Int      @default(30)
+  readOnlyMode           Boolean  @default(false)
+  baseUrl                String?  // For QR codes (e.g., "http://192.168.1.100:3000")
+  theme                  String   @default("system") // "light", "dark", or "system"
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
