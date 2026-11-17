@@ -30,7 +30,7 @@ export async function DELETE(
 
     for (let i = 0; i < remainingItems.length; i++) {
       await prisma.boxItem.update({
-        where: { id: remainingItems[i].id },
+        where: { boxId_itemId: { boxId: remainingItems[i].boxId, itemId: remainingItems[i].itemId } },
         data: { order: i },
       });
     }

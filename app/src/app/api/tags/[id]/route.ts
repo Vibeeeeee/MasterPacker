@@ -64,7 +64,7 @@ export async function PUT(
     // Check if tag with same name exists (excluding current tag)
     const existingTag = await prisma.tag.findFirst({
       where: {
-        name: { equals: name, mode: 'insensitive' },
+        name: { equals: name },
         id: { not: id },
       },
     });

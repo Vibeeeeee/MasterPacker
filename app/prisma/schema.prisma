@@ -102,6 +102,8 @@ model Item {
   attributes      ItemAttribute[]
   pictures        ItemPicture[]
   boxItems        BoxItem[]
+  tripItems       TripItem[]
+  links           ItemLink[]
 }
 
 model ItemTag {
@@ -140,6 +142,8 @@ model Box {
   tags        BoxTag[]
   pictures    BoxPicture[]
   boxItems    BoxItem[]
+  tripBoxes   TripBox[]
+  packedTripItems TripItem[] @relation("TripItemPackedBox")
 }
 
 model BoxItem {
@@ -198,4 +202,59 @@ model AppConfig {
   theme                  String   @default("system") // "light", "dark", or "system"
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
+}
+
+// ============================================
+// TRIPS & PACKING
+// ============================================
+
+model Trip {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  location    String?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      String     @default("planning") // planning, packing, ready, active, completed
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  tripBoxes   TripBox[]
+  tripItems   TripItem[]
+}
+
+model TripBox {
+  id        String   @id @default(cuid())
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  boxId     String
+  box       Box      @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([tripId, boxId])
+}
+
+model TripItem {
+  id         String   @id @default(cuid())
+  tripId     String
+  trip       Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  quantity   Int      @default(1)
+  packedBoxId String?
+  packedBox  Box?     @relation("TripItemPackedBox", fields: [packedBoxId], references: [id])
+  order      Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([tripId, itemId])
+}
+
+model ItemLink {
+  id        String   @id @default(cuid())
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  label     String
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
 }

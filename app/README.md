@@ -4,6 +4,8 @@ A packing and organization website for everything. Built with Next.js, SQLite, a
 
 ## Features
 
+- **Trips & Packing Board**: Plan trips, pick storage boxes to bring, and drag items into boxes on a Gantt-style packing board
+- **Item Landing Pages**: Hero pictures, specs, links/resources, related items, and QR labels
 - **Items Management**: Create, edit, and organize items with custom attributes
 - **Boxes**: Nested box hierarchy for organizing items
 - **Tags**: Flexible tagging system with classes and colors
@@ -168,6 +170,21 @@ app/
 - `GET /api/attributes/:id` - Get attribute details
 - `PUT /api/attributes/:id` - Update attribute
 - `DELETE /api/attributes/:id` - Delete attribute
+
+### Trips
+- `GET /api/trips` - List all trips
+- `POST /api/trips` - Create trip
+- `GET /api/trips/:id` - Get trip with boxes and items
+- `PUT /api/trips/:id` - Update trip (name, dates, status, ...)
+- `DELETE /api/trips/:id` - Delete trip
+- `GET/POST /api/trips/:id/boxes` - List/add storage boxes to a trip
+- `DELETE /api/trips/:id/boxes/:tripBoxId` - Remove a box from a trip
+- `GET/POST /api/trips/:id/items` - List/add items to a trip
+- `PUT/DELETE /api/trips/:id/items/:tripItemId` - Pack an item into a box / remove it
+
+### Item Links
+- `GET/POST /api/items/:id/links` - List/add links (manuals, purchase pages, guides)
+- `PUT/DELETE /api/items/:id/links/:linkId` - Update/delete a link
 
 ### Labels
 - `GET /api/labels/item/:id` - Generate label for item

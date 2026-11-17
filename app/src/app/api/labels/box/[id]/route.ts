@@ -44,7 +44,7 @@ export async function GET(
     });
 
     if (format.toUpperCase() === 'PNG') {
-      return new NextResponse(pngBuffer, {
+      return new NextResponse(new Uint8Array(pngBuffer), {
         headers: {
           'Content-Type': 'image/png',
           'Content-Disposition': `attachment; filename="label_box_${box.name.replace(/[^a-zA-Z0-9]/g, '_')}.png"`,
@@ -54,7 +54,7 @@ export async function GET(
 
     // For other formats, we'd need additional libraries
     // For now, just return PNG
-    return new NextResponse(pngBuffer, {
+    return new NextResponse(new Uint8Array(pngBuffer), {
       headers: {
         'Content-Type': 'image/png',
         'Content-Disposition': `attachment; filename="label_box_${box.name.replace(/[^a-zA-Z0-9]/g, '_')}.png"`,
