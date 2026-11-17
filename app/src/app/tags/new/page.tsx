@@ -8,7 +8,7 @@ import Header from '@/components/ui/Header';
 export default function NewTagPage() {
   const router = useRouter();
   const [name, setName] = useState('');
-  const [color, setColor] = useState('#808080');
+  const [color, setColor] = useState('#6e7c50');
   const [tagClassId, setTagClassId] = useState('');
   const [tagClasses, setTagClasses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,13 +23,13 @@ export default function NewTagPage() {
       const response = await fetch('/api/tag-classes');
       if (!response.ok) {
         // If endpoint doesn't exist, use default
-        setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+        setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
         return;
       }
       const data = await response.json();
       setTagClasses(data.tagClasses || []);
     } catch (err) {
-      setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+      setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
     }
   };
 
@@ -65,20 +65,20 @@ export default function NewTagPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">New Tag</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold t-ink">New Tag</h1>
+          <p className="mt-2 text-sm t-ink-3">
             Create a new tag for organizing your items and boxes
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+            <div className="alert-danger px-4 py-3 rounded-md text-sm">
               {error}
             </div>
           )}
@@ -86,7 +86,7 @@ export default function NewTagPage() {
           <div className="card">
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium t-ink-2 mb-1">
                   Name *
                 </label>
                 <input
@@ -101,7 +101,7 @@ export default function NewTagPage() {
               </div>
 
               <div>
-                <label htmlFor="color" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="color" className="block text-sm font-medium t-ink-2 mb-1">
                   Color
                 </label>
                 <div className="flex items-center space-x-4">
@@ -110,25 +110,25 @@ export default function NewTagPage() {
                     type="color"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                    className="w-12 h-10 rounded-md border border-gray-300 dark:border-gray-600"
+                    className="w-12 h-10 rounded-md"
                   />
-                  <span className="text-gray-600 dark:text-gray-400">{color}</span>
+                  <span className="t-ink-3">{color}</span>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="tagClass" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="tagClass" className="block text-sm font-medium t-ink-2 mb-1">
                   Tag Class (Optional)
                 </label>
                 <select
                   id="tagClass"
                   value={tagClassId}
                   onChange={(e) => setTagClassId(e.target.value)}
-                  className="py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="py-2 rounded-md t-ink"
                 >
                   <option value="">No class</option>
                   {tagClasses.map((tc: any) => (
-                    <option key={tc.id} value={tc.id} className="dark:bg-gray-800">
+                    <option key={tc.id} value={tc.id} >
                       {tc.name}
                     </option>
                   ))}

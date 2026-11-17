@@ -249,12 +249,12 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading box...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading box...</p>
           </div>
         </main>
       </div>
@@ -263,14 +263,14 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
   if (error && !box) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={() => router.push('/boxes')}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Back to boxes
             </button>
@@ -282,11 +282,11 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
   if (!box) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <p className="text-gray-500 dark:text-gray-400">Box not found</p>
+            <p className="t-ink-3">Box not found</p>
             <Link
               href="/boxes"
               className="inline-block mt-4 btn btn-primary"
@@ -300,7 +300,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -308,7 +308,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-bold t-ink">
                 {editMode ? (
                   <input
                     type="text"
@@ -322,7 +322,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                 )}
               </h1>
             </div>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-sm t-ink-3">
               Box ID: {box.id}
             </p>
           </div>
@@ -376,14 +376,14 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
         </div>
 
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm mb-6">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm mb-6">
             {error}
           </div>
         )}
 
         {/* Pictures */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Pictures
           </h2>
           
@@ -399,7 +399,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                   {editMode && (
                     <button
                       onClick={() => handlePictureDelete(picture.id)}
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 btn-danger-solid rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -410,25 +410,19 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400">No pictures</p>
+            <p className="text-sm t-ink-3">No pictures</p>
           )}
 
           {editMode && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium t-ink-2 mb-2">
                 Upload Picture
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handlePictureUpload}
-                className="block w-full text-sm text-gray-500 dark:text-gray-400
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 dark:file:bg-gray-700
-                  file:text-blue-700 dark:file:text-gray-300
-                  hover:file:bg-blue-100 dark:hover:file:bg-gray-600"
+                className="block w-full text-sm t-ink-3 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--accent-soft)] file:t-ink-2 [color:var(--ink-400)] hover:file:brightness-95"
               />
             </div>
           )}
@@ -436,13 +430,13 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
         {/* Basic Information */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Basic Information
           </h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Description
               </label>
               {editMode ? (
@@ -453,35 +447,35 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                   className="input resize-none"
                 />
               ) : (
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="t-ink">
                   {box.description || 'No description'}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Parent Box
               </label>
               {editMode ? (
                 <select
                   value={parentBoxId}
                   onChange={(e) => setParentBoxId(e.target.value)}
-                  className="py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="py-2 rounded-md t-ink"
                 >
                   <option value="">No parent (root level)</option>
                   {allBoxes.filter((b: any) => b.id !== box.id).map((boxItem: any) => (
-                    <option key={boxItem.id} value={boxItem.id} className="dark:bg-gray-800">
+                    <option key={boxItem.id} value={boxItem.id} >
                       {boxItem.name}
                     </option>
                   ))}
                 </select>
               ) : (
-                <p className="text-gray-900 dark:text-gray-100">
+                <p className="t-ink">
                   {box.parentBox ? (
                     <Link
                       href={`/boxes/${box.parentBox.id}`}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      className="link hover:underline"
                     >
                       {box.parentBox.name}
                     </Link>
@@ -496,7 +490,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
         {/* Tags */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Tags
           </h2>
           
@@ -507,7 +501,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                   key={tag.id}
                   type="button"
                   onClick={() => toggleTag(tag.id)}
-                  className={`badge transition-all cursor-pointer ${selectedTagIds.includes(tag.id) ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`badge transition-all cursor-pointer ${selectedTagIds.includes(tag.id) ? 'ring-2 ' : ''}`}
                   style={{
                     backgroundColor: selectedTagIds.includes(tag.id) 
                       ? tag.color + '40'
@@ -531,7 +525,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                 </span>
               ))}
               {box.tags.length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No tags</p>
+                <p className="text-sm t-ink-3">No tags</p>
               )}
             </div>
           )}
@@ -540,7 +534,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
         {/* Items in Box */}
         <div className="card mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold t-ink">
               Items in this Box
             </h2>
             {!editMode && (
@@ -557,7 +551,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
           </div>
           
           {box.boxItems?.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm t-ink-3">
               No items in this box
             </p>
           ) : (
@@ -597,12 +591,12 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                           <td className="font-medium">
                             <Link
                               href={`/items/${boxItem.itemId}`}
-                              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              className="link transition-colors"
                             >
                               {boxItem.item?.name || boxItem.itemId}
                             </Link>
                           </td>
-                          <td className="text-gray-600 dark:text-gray-400 max-w-xs truncate">
+                          <td className="t-ink-3 max-w-xs truncate">
                             {boxItem.item?.description || '-'}
                           </td>
                           <td>
@@ -628,7 +622,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                             <td>
                               <button
                                 onClick={() => handleRemoveItem(boxItem.itemId)}
-                                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
+                                className="danger-link"
                               >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -648,7 +642,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
         {/* Child Boxes */}
         {box.childBoxes?.length > 0 && (
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-semibold t-ink mb-4">
               Child Boxes
             </h2>
             
@@ -657,7 +651,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                 <Link
                   key={child.id}
                   href={`/boxes/${child.id}`}
-                  className="badge badge-default hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                  className="badge badge-default"
                 >
                   {child.name}
                 </Link>
@@ -668,40 +662,40 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
 
         {/* Metadata */}
         <div className="card mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Metadata
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Created
               </label>
-              <p className="text-gray-900 dark:text-gray-100">
+              <p className="t-ink">
                 {new Date(box.createdAt).toLocaleString()}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Last Updated
               </label>
-              <p className="text-gray-900 dark:text-gray-100">
+              <p className="t-ink">
                 {new Date(box.updatedAt).toLocaleString()}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Total Items
               </label>
-              <p className="text-gray-900 dark:text-gray-100">
+              <p className="t-ink">
                 {box.boxItems?.reduce((sum: number, bi: any) => sum + bi.quantity, 0) || 0}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium t-ink-2 mb-1">
                 Child Boxes
               </label>
-              <p className="text-gray-900 dark:text-gray-100">
+              <p className="t-ink">
                 {box.childBoxes?.length || 0}
               </p>
             </div>
@@ -714,7 +708,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
         <div className="modal-overlay">
           <div className="modal-content max-w-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold t-ink">
                 Add Items to Box
               </h3>
               <button
@@ -723,7 +717,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                   setSelectedItemIds([]);
                   setSearchQuery('');
                 }}
-                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                className="t-ink-3 hover:t-ink-2"
               >
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -742,7 +736,7 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             {filteredItems.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400 py-4">
+              <p className="text-sm t-ink-3 py-4">
                 No items available to add
               </p>
             ) : (
@@ -757,10 +751,10 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                           : [...prev, item.id]
                       );
                     }}
-                    className={`p-3 border border-gray-200 dark:border-gray-700 rounded-md mb-2 cursor-pointer transition-all ${
+                    className={`p-3 border [border-color:var(--surface-border)] rounded-md mb-2 cursor-pointer transition-all ${
                       selectedItemIds.includes(item.id) 
-                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500' 
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                        ? '[background:var(--accent-soft)] [border-color:var(--accent)]'
+                        : ''
                     }`}
                   >
                     <div className="flex items-center">
@@ -768,12 +762,12 @@ export default function BoxDetailPage({ params }: { params: Promise<{ id: string
                         type="checkbox"
                         checked={selectedItemIds.includes(item.id)}
                         onChange={() => {}}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                        className="h-4 w-4 rounded"
                       />
                       <div className="ml-3">
-                        <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
+                        <p className="font-medium t-ink">{item.name}</p>
                         {item.description && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
+                          <p className="text-sm t-ink-3">{item.description}</p>
                         )}
                         <div className="flex flex-wrap gap-1 mt-1">
                           {item.tags?.slice(0, 3).map((tag: any) => (

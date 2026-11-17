@@ -43,13 +43,13 @@ export default function TagsPage() {
       const response = await fetch('/api/tag-classes');
       if (!response.ok) {
         // If endpoint doesn't exist, use default
-        setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+        setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
         return;
       }
       const data = await response.json();
       setTagClasses(data.tagClasses || []);
     } catch (err) {
-      setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+      setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
     }
   };
 
@@ -99,15 +99,15 @@ export default function TagsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tags</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <h1 className="text-3xl font-bold t-ink">Tags</h1>
+            <p className="mt-2 text-sm t-ink-3">
               Manage all your tags and tag classes
             </p>
           </div>
@@ -126,11 +126,11 @@ export default function TagsPage() {
         </div>
 
         {/* Search and Filter Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
+        <div className="panel rounded-lg shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-5 w-5 t-ink-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -139,7 +139,7 @@ export default function TagsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search tags..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 t-ink placeholder-[color:var(--ink-400)]"
               />
             </div>
 
@@ -151,11 +151,11 @@ export default function TagsPage() {
                 id="tagClass"
                 value={selectedClass || ''}
                 onChange={(e) => setSelectedClass(e.target.value || null)}
-                className="py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="py-2 rounded-md t-ink"
               >
                 <option value="">All Classes</option>
                 {tagClasses.map((tc: any) => (
-                  <option key={tc.id} value={tc.id} className="dark:bg-gray-800">
+                  <option key={tc.id} value={tc.id} >
                     {tc.name}
                   </option>
                 ))}
@@ -167,18 +167,18 @@ export default function TagsPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading tags...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading tags...</p>
           </div>
         )}
 
         {/* Error */}
         {error && !loading && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={fetchTags}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Retry
             </button>
@@ -204,7 +204,7 @@ export default function TagsPage() {
                     <td className="font-medium">
                       <Link
                         href={`/tags/${tag.id}`}
-                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        className="link transition-colors"
                       >
                         {tag.name}
                       </Link>
@@ -218,7 +218,7 @@ export default function TagsPage() {
                           {tag.tagClass.name}
                         </span>
                       ) : (
-                        <span className="text-gray-400 dark:text-gray-500">-</span>
+                        <span className="t-ink-4">-</span>
                       )}
                     </td>
                     <td>
@@ -236,7 +236,7 @@ export default function TagsPage() {
                       <div className="flex items-center space-x-2">
                         <Link
                           href={`/tags/${tag.id}/edit`}
-                          className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                          className="t-ink-3"
                           title="Edit"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -245,7 +245,7 @@ export default function TagsPage() {
                         </Link>
                         <button
                           onClick={() => handleDeleteTag(tag)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
+                          className="danger-link"
                           title="Delete"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,8 +262,8 @@ export default function TagsPage() {
         )}
 
         {!loading && !error && filteredTags.length === 0 && (
-          <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <p className="text-gray-500 dark:text-gray-400">No tags found</p>
+          <div className="text-center py-8 panel rounded-lg border [border-color:var(--surface-border)]">
+            <p className="t-ink-3">No tags found</p>
             <Link
               href="/tags/new"
               className="inline-block mt-4 btn btn-primary btn-sm"
@@ -278,11 +278,11 @@ export default function TagsPage() {
       {showDeleteModal && tagToDelete && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold t-ink mb-4">
               Delete Tag
             </h3>
             
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="t-ink-3 mb-4">
               Are you sure you want to delete the tag "{tagToDelete.name}"?
               {tagToDelete.usageCount > 0 && (
                 <>
@@ -294,17 +294,17 @@ export default function TagsPage() {
 
             {tagToDelete.usageCount > 0 && (
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium t-ink-2 mb-2">
                   Merge with another tag (optional)
                 </label>
                 <select
                   value={mergeTagId}
                   onChange={(e) => setMergeTagId(e.target.value)}
-                  className="w-full py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full py-2 rounded-md t-ink"
                 >
                   <option value="">Don't merge (delete from all items)</option>
                   {tags.filter((t: any) => t.id !== tagToDelete.id).map((tag: any) => (
-                    <option key={tag.id} value={tag.id} className="dark:bg-gray-800">
+                    <option key={tag.id} value={tag.id} >
                       {tag.name}
                     </option>
                   ))}

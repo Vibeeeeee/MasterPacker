@@ -11,7 +11,7 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [name, setName] = useState('');
-  const [color, setColor] = useState('#808080');
+  const [color, setColor] = useState('#6e7c50');
   const [tagClassId, setTagClassId] = useState('');
   const [tagClasses, setTagClasses] = useState<any[]>([]);
 
@@ -47,13 +47,13 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
     try {
       const response = await fetch('/api/tag-classes');
       if (!response.ok) {
-        setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+        setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
         return;
       }
       const data = await response.json();
       setTagClasses(data.tagClasses || []);
     } catch (err) {
-      setTagClasses([{ id: 'default', name: 'Default', color: '#808080' }]);
+      setTagClasses([{ id: 'default', name: 'Default', color: '#6e7c50' }]);
     }
   };
 
@@ -91,12 +91,12 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading tag...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading tag...</p>
           </div>
         </main>
       </div>
@@ -105,14 +105,14 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
 
   if (error && !tag) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={() => router.push('/tags')}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Back to tags
             </button>
@@ -124,11 +124,11 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
 
   if (!tag) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <p className="text-gray-500 dark:text-gray-400">Tag not found</p>
+            <p className="t-ink-3">Tag not found</p>
             <Link
               href="/tags"
               className="inline-block mt-4 btn btn-primary"
@@ -142,32 +142,32 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Edit Tag</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold t-ink">Edit Tag</h1>
+          <p className="mt-2 text-sm t-ink-3">
             Edit tag: {tag.name}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+            <div className="alert-danger px-4 py-3 rounded-md text-sm">
               {error}
             </div>
           )}
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-semibold t-ink mb-4">
               Tag Information
             </h2>
             
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium t-ink-2 mb-1">
                   Name *
                 </label>
                 <input
@@ -182,7 +182,7 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
               </div>
 
               <div>
-                <label htmlFor="color" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="color" className="block text-sm font-medium t-ink-2 mb-1">
                   Color
                 </label>
                 <div className="flex items-center space-x-4">
@@ -191,25 +191,25 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
                     type="color"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                    className="w-12 h-10 rounded-md border border-gray-300 dark:border-gray-600"
+                    className="w-12 h-10 rounded-md"
                   />
-                  <span className="text-gray-600 dark:text-gray-400">{color}</span>
+                  <span className="t-ink-3">{color}</span>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="tagClass" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="tagClass" className="block text-sm font-medium t-ink-2 mb-1">
                   Tag Class (Optional)
                 </label>
                 <select
                   id="tagClass"
                   value={tagClassId}
                   onChange={(e) => setTagClassId(e.target.value)}
-                  className="py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="py-2 rounded-md t-ink"
                 >
                   <option value="">No class</option>
                   {tagClasses.map((tc: any) => (
-                    <option key={tc.id} value={tc.id} className="dark:bg-gray-800">
+                    <option key={tc.id} value={tc.id} >
                       {tc.name}
                     </option>
                   ))}

@@ -125,12 +125,12 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading item...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading item...</p>
           </div>
         </main>
       </div>
@@ -139,14 +139,14 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
   if (error && !item) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={() => router.push('/items')}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Back to items
             </button>
@@ -158,11 +158,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
   if (!item) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen">
         <Header />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-8">
-            <p className="text-gray-500 dark:text-gray-400">Item not found</p>
+            <p className="t-ink-3">Item not found</p>
             <Link
               href="/items"
               className="inline-block mt-4 btn btn-primary"
@@ -176,32 +176,32 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Edit Item</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold t-ink">Edit Item</h1>
+          <p className="mt-2 text-sm t-ink-3">
             Edit item: {item.name}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+            <div className="alert-danger px-4 py-3 rounded-md text-sm">
               {error}
             </div>
           )}
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-semibold t-ink mb-4">
               Basic Information
             </h2>
             
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium t-ink-2 mb-1">
                   Name *
                 </label>
                 <input
@@ -216,7 +216,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="description" className="block text-sm font-medium t-ink-2 mb-1">
                   Description
                 </label>
                 <textarea
@@ -235,9 +235,9 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   type="checkbox"
                   checked={markForReorder}
                   onChange={(e) => setMarkForReorder(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                  className="h-4 w-4 rounded"
                 />
-                <label htmlFor="markForReorder" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="markForReorder" className="ml-2 block text-sm t-ink-2">
                   Mark for reorder
                 </label>
               </div>
@@ -245,7 +245,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           </div>
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-semibold t-ink mb-4">
               Tags
             </h2>
             
@@ -255,7 +255,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   key={tag.id}
                   type="button"
                   onClick={() => toggleTag(tag.id)}
-                  className={`badge transition-all cursor-pointer ${selectedTagIds.includes(tag.id) ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`badge transition-all cursor-pointer ${selectedTagIds.includes(tag.id) ? 'ring-2 ' : ''}`}
                   style={{
                     backgroundColor: selectedTagIds.includes(tag.id) 
                       ? tag.color + '40'
@@ -269,29 +269,29 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             </div>
             
             {tags.length === 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                No tags available. <Link href="/tags" className="text-blue-600 dark:text-blue-400 hover:underline">Create tags first</Link>.
+              <p className="text-sm t-ink-3 mt-2">
+                No tags available. <Link href="/tags" className="link hover:underline">Create tags first</Link>.
               </p>
             )}
           </div>
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-semibold t-ink mb-4">
               Custom Attributes
             </h2>
             
             {attributes.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                No custom attributes defined. <Link href="/settings" className="text-blue-600 dark:text-blue-400 hover:underline">Create attributes in settings</Link>.
+              <p className="text-sm t-ink-3">
+                No custom attributes defined. <Link href="/settings" className="link hover:underline">Create attributes in settings</Link>.
               </p>
             ) : (
               <div className="space-y-4">
                 {attributes.map((attr: any) => (
-                  <div key={attr.id} className="border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <div key={attr.id} className="border [border-color:var(--surface-border)] rounded-md p-3">
+                    <label className="block text-sm font-medium t-ink-2 mb-1">
                       {attr.name}
                       {attr.type === 'SELECT' && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                        <span className="text-xs t-ink-3 ml-2">
                           (Select one)
                         </span>
                       )}
@@ -303,9 +303,9 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                           type="checkbox"
                           checked={attributeValues[attr.id] === 'true'}
                           onChange={(e) => handleAttributeChange(attr.id, e.target.checked ? 'true' : 'false')}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                          className="h-4 w-4 rounded"
                         />
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                        <span className="ml-2 text-sm t-ink-2">
                           {attributeValues[attr.id] === 'true' ? 'Yes' : 'No'}
                         </span>
                       </div>
@@ -313,7 +313,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                       <select
                         value={attributeValues[attr.id] || ''}
                         onChange={(e) => handleAttributeChange(attr.id, e.target.value)}
-                        className="w-full py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full py-2 rounded-md t-ink"
                       >
                         <option value="">Select an option</option>
                         {attr.options.split(',').map((option: string) => (

@@ -173,29 +173,29 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold t-ink">Settings</h1>
+          <p className="mt-2 text-sm t-ink-3">
             Configure your MasterPacker application
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm mb-6">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm mb-6">
             {error}
           </div>
         )}
 
         {/* Label editor */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-lg font-semibold t-ink mb-2">
             Labels
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <p className="text-sm t-ink-3 mb-4">
             Design the label blueprints for items and boxes — QR codes, text fields, sizes.
           </p>
           <Link href="/labels/editor" className="btn btn-primary btn-sm">
@@ -208,7 +208,7 @@ export default function SettingsPage() {
 
         {/* Theme Settings */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Theme
           </h2>
           
@@ -220,9 +220,9 @@ export default function SettingsPage() {
                   type="radio"
                   checked={theme === 'light'}
                   onChange={() => setThemePreference('light')}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600"
+                  className="h-4 w-4"
                 />
-                <label htmlFor="light" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="light" className="ml-2 text-sm t-ink-2">
                   Light
                 </label>
               </div>
@@ -232,9 +232,9 @@ export default function SettingsPage() {
                   type="radio"
                   checked={theme === 'dark'}
                   onChange={() => setThemePreference('dark')}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600"
+                  className="h-4 w-4"
                 />
-                <label htmlFor="dark" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="dark" className="ml-2 text-sm t-ink-2">
                   Dark
                 </label>
               </div>
@@ -244,15 +244,15 @@ export default function SettingsPage() {
                   type="radio"
                   checked={theme === 'system'}
                   onChange={() => setThemePreference('system')}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600"
+                  className="h-4 w-4"
                 />
-                <label htmlFor="system" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="system" className="ml-2 text-sm t-ink-2">
                   System
                 </label>
               </div>
             </div>
             
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm t-ink-3">
               Current theme: {resolvedTheme === 'light' ? 'Light' : 'Dark'}
             </p>
           </div>
@@ -260,13 +260,13 @@ export default function SettingsPage() {
 
         {/* General Settings */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             General Settings
           </h2>
           
           <div className="space-y-4">
             <div>
-              <label htmlFor="baseUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="baseUrl" className="block text-sm font-medium t-ink-2 mb-1">
                 Base URL (for QR codes)
               </label>
               <input
@@ -277,7 +277,7 @@ export default function SettingsPage() {
                 placeholder="http://192.168.1.100:3000"
                 className="input"
               />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm t-ink-3 mt-1">
                 This is used to generate QR codes that link back to your items and boxes
               </p>
             </div>
@@ -289,13 +289,13 @@ export default function SettingsPage() {
                   type="checkbox"
                   checked={readOnlyMode}
                   onChange={(e) => setReadOnlyMode(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                  className="h-4 w-4 rounded"
                 />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <span className="ml-2 text-sm t-ink-2">
                   Enable read-only mode
                 </span>
               </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm t-ink-3 mt-1">
                 When enabled, all users will only be able to view data, not modify it
               </p>
             </div>
@@ -304,13 +304,13 @@ export default function SettingsPage() {
 
         {/* Snapshot Settings */}
         <div className="card mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold t-ink mb-4">
             Automatic Snapshots
           </h2>
           
           <div className="space-y-4">
             <div>
-              <label htmlFor="autoSnapshotInterval" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="autoSnapshotInterval" className="block text-sm font-medium t-ink-2 mb-1">
                 Snapshot Interval (hours)
               </label>
               <input
@@ -321,13 +321,13 @@ export default function SettingsPage() {
                 min={1}
                 className="input"
               />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm t-ink-3 mt-1">
                 How often to automatically create snapshots (0 to disable)
               </p>
             </div>
 
             <div>
-              <label htmlFor="maxSnapshots" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="maxSnapshots" className="block text-sm font-medium t-ink-2 mb-1">
                 Maximum Snapshots
               </label>
               <input
@@ -338,7 +338,7 @@ export default function SettingsPage() {
                 min={1}
                 className="input"
               />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm t-ink-3 mt-1">
                 Maximum number of snapshots to keep (oldest will be deleted automatically)
               </p>
             </div>
@@ -348,7 +348,7 @@ export default function SettingsPage() {
         {/* Snapshot Management */}
         <div className="card mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold t-ink">
               Snapshot Management
             </h2>
             <button
@@ -361,7 +361,7 @@ export default function SettingsPage() {
           </div>
           
           {snapshots.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm t-ink-3">
               No snapshots yet. Create one to start versioning your data.
             </p>
           ) : (
@@ -387,7 +387,7 @@ export default function SettingsPage() {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleRestoreSnapshot(snapshot.id || snapshot.filename)}
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                            className="link link"
                             title="Restore"
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -396,7 +396,7 @@ export default function SettingsPage() {
                           </button>
                           <button
                             onClick={() => handleDeleteSnapshot(snapshot.id || snapshot.filename, snapshot.filename)}
-                            className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
+                            className="danger-link"
                             title="Delete"
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

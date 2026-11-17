@@ -69,15 +69,15 @@ export default function ItemsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Items</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <h1 className="text-3xl font-bold t-ink">Items</h1>
+            <p className="mt-2 text-sm t-ink-3">
               Manage all your items with tags, attributes, and box assignments
             </p>
           </div>
@@ -117,11 +117,11 @@ export default function ItemsPage() {
         </div>
 
         {/* Search and Filter Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
+        <div className="panel rounded-lg shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-5 w-5 t-ink-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -130,7 +130,7 @@ export default function ItemsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search items by name or description..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 t-ink placeholder-[color:var(--ink-400)]"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export default function ItemsPage() {
                 <button
                   key={tag.id}
                   onClick={() => toggleTag(tag.id)}
-                  className={`badge transition-all ${selectedTags.includes(tag.id) ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`badge transition-all ${selectedTags.includes(tag.id) ? 'ring-2 ' : ''}`}
                   style={{
                     backgroundColor: selectedTags.includes(tag.id) 
                       ? tag.color + '40'
@@ -158,7 +158,7 @@ export default function ItemsPage() {
             {selectedTags.length > 0 && (
               <button
                 onClick={() => setSelectedTags([])}
-                className="mt-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                className="mt-2 text-sm t-ink-3 link"
               >
                 Clear all filters
               </button>
@@ -169,18 +169,18 @@ export default function ItemsPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading items...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading items...</p>
           </div>
         )}
 
         {/* Error */}
         {error && !loading && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={fetchItems}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Retry
             </button>
@@ -193,8 +193,8 @@ export default function ItemsPage() {
             {/* Mobile View */}
             <div className="md:hidden space-y-4">
               {items.length === 0 ? (
-                <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <p className="text-gray-500 dark:text-gray-400">No items found</p>
+                <div className="text-center py-8 panel rounded-lg border [border-color:var(--surface-border)]">
+                  <p className="t-ink-3">No items found</p>
                   <Link
                     href="/items/new"
                     className="inline-block mt-4 btn btn-primary btn-sm"
@@ -210,13 +210,13 @@ export default function ItemsPage() {
                         <h3 className="font-medium text-lg">
                           <Link
                             href={`/items/${item.id}`}
-                            className="hover:text-blue-600 dark:hover:text-blue-400"
+                            className="link"
                           >
                             {item.name}
                           </Link>
                         </h3>
                         {item.description && (
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <p className="text-sm t-ink-3 mt-1">
                             {item.description}
                           </p>
                         )}
@@ -254,7 +254,7 @@ export default function ItemsPage() {
                         )}
 
                         {item.markForReorder && (
-                          <span className="inline-block mt-2 badge bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200">
+                          <span className="inline-block mt-2 badge [background:var(--accent-soft)] t-ink-2">
                             Marked for reorder
                           </span>
                         )}
@@ -263,7 +263,7 @@ export default function ItemsPage() {
                       <div className="flex items-center space-x-2 ml-4">
                         <Link
                           href={`/items/${item.id}`}
-                          className="text-blue-600 dark:text-blue-400"
+                          className="link"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -272,7 +272,7 @@ export default function ItemsPage() {
                         </Link>
                         <Link
                           href={`/items/${item.id}/edit`}
-                          className="text-gray-600 dark:text-gray-400"
+                          className="t-ink-3"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -288,10 +288,10 @@ export default function ItemsPage() {
             {/* Desktop View */}
             <div className="hidden md:block">
               {items.length === 0 ? (
-                <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <p className="text-gray-500 dark:text-gray-400">No items found</p>
+                <div className="text-center py-8 panel rounded-lg border [border-color:var(--surface-border)]">
+                  <p className="t-ink-3">No items found</p>
                   {searchQuery || selectedTags.length > 0 ? (
-                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                    <p className="text-sm t-ink-4 mt-1">
                       Try adjusting your search or filters
                     </p>
                   ) : (
@@ -322,12 +322,12 @@ export default function ItemsPage() {
                           <td className="font-medium">
                             <Link
                               href={`/items/${item.id}`}
-                              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              className="link transition-colors"
                             >
                               {item.name}
                             </Link>
                           </td>
-                          <td className="text-gray-600 dark:text-gray-400 max-w-xs truncate">
+                          <td className="t-ink-3 max-w-xs truncate">
                             {item.description || '-'}
                           </td>
                           <td>
@@ -353,7 +353,7 @@ export default function ItemsPage() {
                                   <Link
                                     key={boxItem.boxId}
                                     href={`/boxes/${boxItem.boxId}`}
-                                    className="badge badge-default hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                                    className="badge badge-default"
                                   >
                                     {boxItem.box.name}
                                   </Link>
@@ -363,12 +363,12 @@ export default function ItemsPage() {
                                 )}
                               </div>
                             ) : (
-                              <span className="text-gray-400 dark:text-gray-500">-</span>
+                              <span className="t-ink-4">-</span>
                             )}
                           </td>
                           <td className="text-center">
                             {item.markForReorder && (
-                              <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-5 h-5 t-ink-3 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
                             )}
@@ -377,7 +377,7 @@ export default function ItemsPage() {
                             <div className="flex items-center justify-center space-x-2">
                               <Link
                                 href={`/items/${item.id}`}
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                                className="link link"
                                 title="View"
                               >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -387,7 +387,7 @@ export default function ItemsPage() {
                               </Link>
                               <Link
                                 href={`/items/${item.id}/edit`}
-                                className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                                className="t-ink-3"
                                 title="Edit"
                               >
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -412,7 +412,7 @@ export default function ItemsPage() {
         <div className="flex justify-around">
           <Link
             href="/"
-            className="flex flex-col items-center py-2 text-blue-600 dark:text-blue-400"
+            className="flex flex-col items-center py-2 link"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -421,7 +421,7 @@ export default function ItemsPage() {
           </Link>
           <Link
             href="/boxes"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+            className="flex flex-col items-center py-2 t-ink-2 link"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
@@ -430,7 +430,7 @@ export default function ItemsPage() {
           </Link>
           <Link
             href="/tags"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+            className="flex flex-col items-center py-2 t-ink-2 link"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8V7a4 4 0 014-4z" />
@@ -439,7 +439,7 @@ export default function ItemsPage() {
           </Link>
           <Link
             href="/settings"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+            className="flex flex-col items-center py-2 t-ink-2 link"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />

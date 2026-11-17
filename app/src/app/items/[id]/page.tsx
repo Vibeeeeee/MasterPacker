@@ -256,7 +256,7 @@ export default function ItemDetailPage({ params }: { params: Promise<{ id: strin
       <div className="min-h-screen">
         <Header />
         <main className="max-w-5xl mx-auto px-4 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+          <div className="alert-danger px-4 py-3 rounded-lg text-sm">
             {error}
             <Link href="/" className="ml-4 underline">Back to items</Link>
           </div>
@@ -398,7 +398,7 @@ export default function ItemDetailPage({ params }: { params: Promise<{ id: strin
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm mb-6">
+          <div className="alert-danger px-4 py-3 rounded-lg text-sm mb-6">
             {error}
           </div>
         )}
@@ -414,7 +414,7 @@ export default function ItemDetailPage({ params }: { params: Promise<{ id: strin
                   {editMode && (
                     <button
                       onClick={() => handlePictureDelete(picture.id)}
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 btn-danger-solid rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

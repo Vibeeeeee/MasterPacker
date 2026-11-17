@@ -143,11 +143,11 @@ export default function BoxesPage() {
             className="mr-2 flex-shrink-0"
           >
             {expandedBoxes.has(box.id) ? (
-              <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 t-ink-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 t-ink-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             )}
@@ -181,7 +181,7 @@ export default function BoxesPage() {
             <h3 className="font-medium text-lg">
               <Link
                 href={`/boxes/${box.id}`}
-                className="hover:text-blue-600 dark:hover:text-blue-400"
+                className="link"
               >
                 {box.name}
               </Link>
@@ -204,12 +204,12 @@ export default function BoxesPage() {
           </div>
           
           {box.description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-sm t-ink-3 mt-1">
               {box.description}
             </p>
           )}
           
-          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <div className="text-sm t-ink-3 mt-1">
             {box.boxItems.length} items
             {box.childBoxes.length > 0 && `, ${box.childBoxes.length} sub-boxes`}
           </div>
@@ -218,7 +218,7 @@ export default function BoxesPage() {
         <div className="flex items-center space-x-2 ml-4">
           <Link
             href={`/boxes/${box.id}`}
-            className="text-blue-600 dark:text-blue-400"
+            className="link"
             title="View"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,7 +228,7 @@ export default function BoxesPage() {
           </Link>
           <Link
             href={`/boxes/${box.id}/edit`}
-            className="text-gray-600 dark:text-gray-400"
+            className="t-ink-3"
             title="Edit"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -240,7 +240,7 @@ export default function BoxesPage() {
       
       {/* Child boxes */}
       {expandedBoxes.has(box.id) && box.childBoxes.length > 0 && (
-        <div className="mt-2 border-l border-gray-200 dark:border-gray-700 pl-4">
+        <div className="mt-2 border-l [border-color:var(--surface-border)] pl-4">
           {box.childBoxes.map((child: any) => renderBoxTree(child, depth + 1))}
         </div>
       )}
@@ -248,7 +248,7 @@ export default function BoxesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -306,8 +306,8 @@ export default function BoxesPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Boxes</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <h1 className="text-3xl font-bold t-ink">Boxes</h1>
+            <p className="mt-2 text-sm t-ink-3">
               Organize your items in nested boxes
             </p>
           </div>
@@ -326,11 +326,11 @@ export default function BoxesPage() {
         </div>
 
         {/* Search and Filter Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
+        <div className="panel rounded-lg shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-5 w-5 t-ink-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -339,7 +339,7 @@ export default function BoxesPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search boxes..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 t-ink placeholder-[color:var(--ink-400)]"
               />
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function BoxesPage() {
                 <button
                   key={tag.id}
                   onClick={() => toggleTag(tag.id)}
-                  className={`badge transition-all ${selectedTags.includes(tag.id) ? 'ring-2 ring-blue-500' : ''}`}
+                  className={`badge transition-all ${selectedTags.includes(tag.id) ? 'ring-2 ' : ''}`}
                   style={{
                     backgroundColor: selectedTags.includes(tag.id) 
                       ? tag.color + '40'
@@ -367,7 +367,7 @@ export default function BoxesPage() {
             {selectedTags.length > 0 && (
               <button
                 onClick={() => setSelectedTags([])}
-                className="mt-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                className="mt-2 text-sm t-ink-3 link"
               >
                 Clear all filters
               </button>
@@ -378,18 +378,18 @@ export default function BoxesPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading boxes...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] [border-color:var(--surface-border-strong)] [border-top-color:var(--accent)]"></div>
+            <p className="mt-2 t-ink-3">Loading boxes...</p>
           </div>
         )}
 
         {/* Error */}
         {error && !loading && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="alert-danger px-4 py-3 rounded-md text-sm">
             {error}
             <button
               onClick={fetchBoxes}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
+              className="ml-4 danger-link hover:underline"
             >
               Retry
             </button>
@@ -398,10 +398,10 @@ export default function BoxesPage() {
 
         {/* Boxes Tree */}
         {!loading && !error && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="panel rounded-lg border [border-color:var(--surface-border)] overflow-hidden">
             {boxes.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">No boxes found</p>
+                <p className="t-ink-3">No boxes found</p>
                 <Link
                   href="/boxes/new"
                   className="inline-block mt-4 btn btn-primary btn-sm"
