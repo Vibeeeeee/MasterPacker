@@ -73,7 +73,7 @@ export default function Header() {
                   className="px-4 py-1.5 rounded-full text-sm font-semibold transition-all"
                   style={active ? {
                     background: 'linear-gradient(135deg, var(--accent), var(--accent-strong))',
-                    color: '#fff',
+                    color: 'var(--accent-contrast, #fff)',
                     boxShadow: '0 2px 10px var(--accent-glow)',
                   } : {
                     color: 'var(--ink-500)',
@@ -117,7 +117,7 @@ export default function Header() {
                 className="px-3.5 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap"
                 style={active ? {
                   background: 'linear-gradient(135deg, var(--accent), var(--accent-strong))',
-                  color: '#fff',
+                  color: 'var(--accent-contrast, #fff)',
                 } : {
                   color: 'var(--ink-500)',
                   background: 'var(--surface-glass-strong)',

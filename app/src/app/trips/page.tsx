@@ -5,11 +5,11 @@ import Link from 'next/link';
 import Header from '@/components/ui/Header';
 
 const statusMeta: Record<string, { label: string; color: string }> = {
-  planning: { label: 'Planning', color: '#8a9282' },
-  packing: { label: 'Packing', color: '#c89b5e' },
-  ready: { label: 'Ready to go', color: '#3f6b4e' },
-  active: { label: 'On the trail', color: '#2f8a4c' },
-  completed: { label: 'Completed', color: '#66705e' },
+  planning: { label: 'Planning', color: 'var(--status-planning)' },
+  packing: { label: 'Packing', color: 'var(--status-packing)' },
+  ready: { label: 'Ready to go', color: 'var(--status-ready)' },
+  active: { label: 'On the trail', color: 'var(--status-active)' },
+  completed: { label: 'Completed', color: 'var(--status-completed)' },
 };
 
 export default function TripsPage() {
@@ -117,7 +117,7 @@ export default function TripsPage() {
                         </p>
                       )}
                     </div>
-                    <span className="badge shrink-0" style={{ backgroundColor: meta.color + '22', color: meta.color }}>
+                    <span className="badge shrink-0" style={{ backgroundColor: `color-mix(in srgb, ${meta.color} 13%, transparent)`, color: meta.color }}>
                       {meta.label}
                     </span>
                   </div>

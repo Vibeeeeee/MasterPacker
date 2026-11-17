@@ -34,29 +34,56 @@
   --danger: #ef4444;
   --success: #22c55e;
 
+  /* Accent-contrast: text color that sits on accent backgrounds.
+     White on orange in light mode; very dark pistachio on straw in dark. */
+  --accent-contrast: #fff;
+
+  /* Secondary scene glow (teal in light mode, pistachio in dark) */
+  --glow-secondary: rgba(20, 184, 166, 0.1);
+
+  /* Trip status colors (theme-aware; dark values favor legibility) */
+  --status-planning: #94a3b8;
+  --status-packing: #f97316;
+  --status-ready: #22c55e;
+  --status-active: #14b8a6;
+  --status-completed: #64748b;
+
   --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
   --shadow-pop: 0 12px 40px rgba(15, 23, 42, 0.16);
 }
 
 .dark {
-  /* Scene background (dark: deep night-blue trail) */
-  --background-start-rgb: #0a0f1c;
-  --background-end-rgb: #162033;
+  /* Scene background (dark: deep pistachio valley — DMC 319 based) */
+  --background-start-rgb: #232b1a;
+  --background-end-rgb: #2e3a22;
 
-  --surface-glass: rgba(148, 163, 184, 0.07);
-  --surface-glass-strong: rgba(148, 163, 184, 0.12);
-  --surface-border: rgba(148, 163, 184, 0.16);
-  --surface-border-strong: rgba(148, 163, 184, 0.28);
+  --surface-glass: rgba(185, 190, 151, 0.07);
+  --surface-glass-strong: rgba(185, 190, 151, 0.12);
+  --surface-border: rgba(185, 190, 151, 0.16);
+  --surface-border-strong: rgba(185, 190, 151, 0.28);
 
-  --ink-900: #f1f5f9;
-  --ink-700: #cbd5e1;
-  --ink-500: #94a3b8;
-  --ink-400: #64748b;
+  --ink-900: #f0efe2;
+  --ink-700: #d9ddc3;
+  --ink-500: #b9be97;
+  --ink-400: #8b9070;
 
-  --accent: #fb8c3c;
-  --accent-strong: #f97316;
-  --accent-soft: rgba(251, 140, 60, 0.16);
-  --accent-glow: rgba(251, 140, 60, 0.4);
+  --accent: #e8b04b;
+  --accent-strong: #f0c060;
+  --accent-soft: rgba(232, 176, 75, 0.14);
+  --accent-glow: rgba(232, 176, 75, 0.3);
+  --accent-contrast: #3f4c2d;
+
+  --success: #b9be97;
+  --danger: #e08a7a;
+
+  --glow-secondary: rgba(185, 190, 151, 0.1);
+
+  /* Trip status colors — palette family, legible on deep pistachio */
+  --status-planning: #b9be97;
+  --status-packing: #e8b04b;
+  --status-ready: #a9c98d;
+  --status-active: #d9ddc3;
+  --status-completed: #8b9070;
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.35);
   --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.5);
@@ -91,6 +118,15 @@ body {
   min-height: 100vh;
 }
 
+::selection {
+  background: rgba(232, 176, 75, 0.3);
+}
+
+.dark ::selection {
+  background: rgba(232, 176, 75, 0.3);
+  color: #f0efe2;
+}
+
 /* Atmospheric scene: layered night-sky gradient with aurora glows */
 body::before {
   content: '';
@@ -100,7 +136,7 @@ body::before {
   pointer-events: none;
   background:
     radial-gradient(60rem 40rem at 85% -10%, var(--accent-soft), transparent 60%),
-    radial-gradient(50rem 36rem at -10% 30%, rgba(20, 184, 166, 0.1), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 30%, var(--glow-secondary), transparent 60%),
     linear-gradient(160deg, var(--background-start-rgb) 0%, var(--background-end-rgb) 100%);
 }
 
@@ -110,7 +146,7 @@ body::before {
 }
 
 .dark .topo-bg {
-  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2394a3b8' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M-20 60 Q 40 20, 100 60 T 220 60 T 340 60'/%3E%3Cpath d='M-20 90 Q 40 50, 100 90 T 220 90 T 340 90'/%3E%3Cpath d='M-20 120 Q 40 80, 100 120 T 220 120 T 340 120'/%3E%3Cpath d='M-20 150 Q 40 110, 100 150 T 220 150 T 340 150'/%3E%3Cpath d='M-20 180 Q 40 140, 100 180 T 220 180 T 340 180'/%3E%3Cpath d='M-20 210 Q 40 170, 100 210 T 220 210 T 340 210'/%3E%3Ccircle cx='120' cy='120' r='110'/%3E%3Ccircle cx='120' cy='120' r='80'/%3E%3Ccircle cx='120' cy='120' r='50'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%236e7c50' stroke-opacity='0.08' stroke-width='1'%3E%3Cpath d='M-20 60 Q 40 20, 100 60 T 220 60 T 340 60'/%3E%3Cpath d='M-20 90 Q 40 50, 100 90 T 220 90 T 340 90'/%3E%3Cpath d='M-20 120 Q 40 80, 100 120 T 220 120 T 340 120'/%3E%3Cpath d='M-20 150 Q 40 110, 100 150 T 220 150 T 340 150'/%3E%3Cpath d='M-20 180 Q 40 140, 100 180 T 220 180 T 340 180'/%3E%3Cpath d='M-20 210 Q 40 170, 100 210 T 220 210 T 340 210'/%3E%3Ccircle cx='120' cy='120' r='110'/%3E%3Ccircle cx='120' cy='120' r='80'/%3E%3Ccircle cx='120' cy='120' r='50'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ------------------------------------------------------------
@@ -164,7 +200,7 @@ body::before {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
+  color: var(--accent-contrast, #fff);
   box-shadow: 0 4px 16px var(--accent-glow);
 }
 
@@ -199,9 +235,9 @@ body::before {
 }
 
 .btn-danger {
-  background: rgba(239, 68, 68, 0.12);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
-  border-color: rgba(239, 68, 68, 0.35);
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
 }
 
 .btn-danger:hover {
@@ -213,6 +249,12 @@ body::before {
   background: rgba(34, 197, 94, 0.12);
   color: var(--success);
   border-color: rgba(34, 197, 94, 0.35);
+}
+
+.dark .btn-success {
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  border-color: color-mix(in srgb, var(--success) 35%, transparent);
+  color: #232b1a;
 }
 
 .btn-success:hover {
@@ -276,7 +318,7 @@ body::before {
 
 .chip-active {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
+  color: var(--accent-contrast, #fff);
   border-color: transparent;
   box-shadow: 0 4px 14px var(--accent-glow);
 }
@@ -397,6 +439,12 @@ textarea:focus {
   color: transparent;
 }
 
+.dark .text-gradient {
+  background: linear-gradient(120deg, #b9be97, #e8b04b);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* ------------------------------------------------------------
    Modal
    ------------------------------------------------------------ */
@@ -411,6 +459,10 @@ textarea:focus {
   background: rgba(2, 6, 23, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+.dark .modal-overlay {
+  background: rgba(63, 76, 45, 0.6);
 }
 
 .modal-content {
@@ -487,6 +539,11 @@ textarea:focus {
   background: linear-gradient(90deg, var(--accent-strong), var(--accent));
 }
 
+/* Dark: valley-to-sunrise — dark pistachio into straw */
+.dark .progress-fill {
+  background: linear-gradient(90deg, #6e7c50, #e8b04b);
+}
+
 /* Edit mode indicator */
 .edit-mode-indicator {
   position: fixed;
@@ -498,7 +555,7 @@ textarea:focus {
   box-shadow: var(--shadow-pop);
   z-index: 50;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
+  color: var(--accent-contrast, #fff);
 }
 
 /* Scrollbar */

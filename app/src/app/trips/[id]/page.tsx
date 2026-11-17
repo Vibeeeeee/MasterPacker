@@ -6,11 +6,11 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/ui/Header';
 
 const statusMeta: Record<string, { label: string; color: string }> = {
-  planning: { label: 'Planning', color: '#94a3b8' },
-  packing: { label: 'Packing', color: '#f97316' },
-  ready: { label: 'Ready to go', color: '#22c55e' },
-  active: { label: 'On the trail', color: '#14b8a6' },
-  completed: { label: 'Completed', color: '#64748b' },
+  planning: { label: 'Planning', color: 'var(--status-planning)' },
+  packing: { label: 'Packing', color: 'var(--status-packing)' },
+  ready: { label: 'Ready to go', color: 'var(--status-ready)' },
+  active: { label: 'On the trail', color: 'var(--status-active)' },
+  completed: { label: 'Completed', color: 'var(--status-completed)' },
 };
 
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -351,7 +351,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                 <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: 'var(--ink-900)' }}>
                   {trip.name}
                 </h1>
-                <span className="badge" style={{ backgroundColor: meta.color + '22', color: meta.color }}>
+                <span className="badge" style={{ backgroundColor: `color-mix(in srgb, ${meta.color} 13%, transparent)`, color: meta.color }}>
                   {meta.label}
                 </span>
               </div>

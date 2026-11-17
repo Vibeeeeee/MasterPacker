@@ -31,25 +31,27 @@ export function useTheme() {
     }
 
     setResolvedTheme(actualTheme);
-    
+
     // Apply to document
     if (actualTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
+    // NOTE: do not persist here — writing the initial state on mount would
+    // clobber the user's saved preference (strict mode re-runs this effect
+    // before the loader effect above has corrected the state).
   }, [theme]);
 
   const toggleTheme = () => {
     const newTheme: Theme = resolvedTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   const setThemePreference = (newTheme: Theme) => {
     setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   return {

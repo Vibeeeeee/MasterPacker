@@ -134,7 +134,7 @@ export default function HomePage() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(50rem 24rem at 20% 0%, var(--accent-soft), transparent 65%), radial-gradient(40rem 24rem at 90% 20%, rgba(20, 184, 166, 0.12), transparent 65%)',
+              'radial-gradient(50rem 24rem at 20% 0%, var(--accent-soft), transparent 65%), radial-gradient(40rem 24rem at 90% 20%, var(--glow-secondary), transparent 65%)',
           }}
         />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
@@ -256,8 +256,7 @@ export default function HomePage() {
                       color: '#fff',
                       borderColor: 'transparent',
                       boxShadow: `0 4px 14px ${tag.color}55`,
-                    } : undefined}
-                  >
+                    } : undefined}                  >
                     {tag.name}
                   </button>
                 );
@@ -351,7 +350,7 @@ export default function HomePage() {
                       className="sr-only"
                     />
                     {selectedIds.has(item.id) && (
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg className="w-4 h-4" style={{ color: 'var(--accent-contrast, #fff)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     )}
