@@ -24,6 +24,7 @@
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20.19.43",
     "@types/qrcode": "^1.5.6",

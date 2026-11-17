@@ -4,17 +4,19 @@ import { getCurrentUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    const config = await prisma.appConfig.upsert({
-      where: { id: 'default' },
-      create: {
+    // Read-first: an upsert here would write the SQLite file on every request
+    // (the middleware calls this for each protected route), which Turbopack
+    // treats as a file change and hot-reloads the page in dev.
+    const existing = await prisma.appConfig.findUnique({ where: { id: 'default' } });
+    const config = existing || (await prisma.appConfig.create({
+      data: {
         id: 'default',
         autoSnapshotInterval: 24,
         maxSnapshots: 30,
         readOnlyMode: false,
         theme: 'system',
       },
-      update: {},
-    });
+    }));
 
     return NextResponse.json(config);
   } catch (error) {

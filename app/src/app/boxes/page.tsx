@@ -3,6 +3,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/ui/Header';
+import { LABEL_SIZES } from '@/lib/label-sizes';
+
+const BOX_SIZES = LABEL_SIZES.filter(s => s.kind === 'box');
+
+const EXPORT_FORMATS = [
+  { value: 'png', label: 'PNG (ZIP when multiple)' },
+  { value: 'strip', label: 'Cut-line strip (PNG)' },
+  { value: 'lemc', label: 'Epson label file (.lemc)' },
+];
 
 export default function BoxesPage() {
   const [boxes, setBoxes] = useState([]);
@@ -12,6 +21,12 @@ export default function BoxesPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState([]);
   const [expandedBoxes, setExpandedBoxes] = useState<Set<string>>(new Set());
+
+  // Label creation
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [labelSize, setLabelSize] = useState('MP_BOX_MM24');
+  const [labelFormat, setLabelFormat] = useState('png');
+  const [creatingLabels, setCreatingLabels] = useState(false);
 
   useEffect(() => {
     fetchBoxes();
@@ -76,6 +91,49 @@ export default function BoxesPage() {
     );
   };
 
+  const toggleSelected = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const createLabels = async () => {
+    if (selectedIds.size === 0) return;
+    setCreatingLabels(true);
+    try {
+      const res = await fetch('/api/labels/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'box',
+          ids: [...selectedIds],
+          size: labelSize,
+          format: labelFormat,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to create labels');
+      const blob = await res.blob();
+      const disposition = res.headers.get('Content-Disposition') || '';
+      const match = disposition.match(/filename="?([^";]+)"?/);
+      const filename = match ? match[1] : 'labels.zip';
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Failed to create labels. Please try again.');
+    } finally {
+      setCreatingLabels(false);
+    }
+  };
+
   const renderBoxTree = (box: any, depth = 0) => (
     <div key={box.id} className={`ml-${depth * 4}`}>
       <div className="flex items-start">
@@ -98,6 +156,28 @@ export default function BoxesPage() {
         
         <div className="flex-1">
           <div className="flex items-center space-x-2">
+            <label
+              className="flex items-center justify-center cursor-pointer shrink-0"
+              style={{
+                width: 22, height: 22, borderRadius: 6,
+                background: selectedIds.has(box.id) ? 'linear-gradient(135deg, var(--accent), var(--accent-strong))' : 'var(--surface-glass-strong)',
+                border: selectedIds.has(box.id) ? 'none' : '1.5px solid var(--surface-border-strong)',
+                boxShadow: selectedIds.has(box.id) ? '0 2px 10px var(--accent-glow)' : undefined,
+              }}
+              aria-label={`Select ${box.name} for labels`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedIds.has(box.id)}
+                onChange={() => toggleSelected(box.id)}
+                className="sr-only"
+              />
+              {selectedIds.has(box.id) && (
+                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </label>
             <h3 className="font-medium text-lg">
               <Link
                 href={`/boxes/${box.id}`}
@@ -172,6 +252,57 @@ export default function BoxesPage() {
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Label creation toolbar */}
+        {selectedIds.size > 0 && (
+          <div
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-wrap items-center gap-2 px-4 py-3 rounded-2xl max-w-[calc(100vw-2rem)]"
+            style={{
+              background: 'var(--surface-glass-strong)',
+              border: '1px solid var(--surface-border-strong)',
+              boxShadow: 'var(--shadow-pop)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+            }}
+          >
+            <span className="text-sm font-bold whitespace-nowrap" style={{ color: 'var(--ink-900)' }}>
+              {selectedIds.size} selected
+            </span>
+            <select
+              value={labelSize}
+              onChange={(e) => setLabelSize(e.target.value)}
+              className="!w-auto !py-1.5 !text-xs"
+              aria-label="Label size"
+              title="Label size"
+            >
+              {BOX_SIZES.map(s => (
+                <option key={s.key} value={s.key}>{s.name}</option>
+              ))}
+            </select>
+            <select
+              value={labelFormat}
+              onChange={(e) => setLabelFormat(e.target.value)}
+              className="!w-auto !py-1.5 !text-xs"
+              aria-label="Export format"
+              title="Export format"
+            >
+              {EXPORT_FORMATS.map(f => (
+                <option key={f.value} value={f.value}>{f.label}</option>
+              ))}
+            </select>
+            <button onClick={createLabels} disabled={creatingLabels} className="btn btn-primary btn-sm">
+              {creatingLabels ? 'Creating…' : 'Create labels'}
+            </button>
+            <Link href="/labels/editor" className="btn btn-secondary btn-sm">Edit layout</Link>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="btn btn-secondary btn-sm"
+              aria-label="Clear selection"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>

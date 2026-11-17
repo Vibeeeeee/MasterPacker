@@ -3,64 +3,40 @@ import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { prisma } from './prisma';
+import {
+  DEFAULT_LAYOUTS,
+  DEFAULT_WIDTHS,
+  type LabelSizeKey,
+  type LayoutElement,
+} from './label-sizes';
 
-// Layout element type
-interface LayoutElement {
-  id: string;
-  field: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  fontSizePt: number;
+export { DEFAULT_LAYOUTS, DEFAULT_WIDTHS };
+export type { LayoutElement, LabelSizeKey };
+
+// Resolve the effective layout for a size: a saved custom layout from the
+// database wins, otherwise the built-in default.
+export async function getEffectiveLayout(
+  size: string
+): Promise<{ layoutJson: string; widthMm: number; heightMm: number }> {
+  const meta = (await import('./label-sizes')).getLabelSizeMeta(size);
+  let layoutJson: string | null = null;
+  let widthMm: number | null = null;
+  try {
+    const saved = await prisma.labelLayout.findUnique({ where: { size } });
+    if (saved) {
+      layoutJson = saved.layoutJson;
+      widthMm = saved.widthMm;
+    }
+  } catch {
+    // fall through to defaults
+  }
+  return {
+    layoutJson: layoutJson || DEFAULT_LAYOUTS[meta.key],
+    widthMm: widthMm || meta.widthMm,
+    heightMm: meta.heightMm,
+  };
 }
-
-// Default layouts
-const DEFAULT_LAYOUTS = {
-  GRID12: JSON.stringify([
-    { id: 'qr', field: 'QR Code', x: 24, y: 1, w: 10, h: 10, fontSizePt: 10 },
-    { id: 'name', field: 'Name', x: 0.9, y: 1, w: 13.5, h: 5, fontSizePt: 14 },
-    { id: 'norm', field: 'Norm', x: 0.9, y: 6, w: 23, h: 2.5, fontSizePt: 7 },
-    { id: 'type', field: 'Type', x: 0.9, y: 8.5, w: 23, h: 2.5, fontSizePt: 7 },
-    { id: 'drive', field: 'Drive', x: 14.4, y: 1, w: 9.5, h: 5, fontSizePt: 14 },
-  ]),
-  MM12: JSON.stringify([
-    { id: 'qr', field: 'QR Code', x: 24, y: 1, w: 10, h: 10, fontSizePt: 10 },
-    { id: 'name', field: 'Name', x: 1.1, y: 0.5, w: 22, h: 6, fontSizePt: 16 },
-  ]),
-  MM24: JSON.stringify([
-    { id: 'qr', field: 'QR Code', x: 29.3, y: 1.8, w: 12.5, h: 12.5, fontSizePt: 12.5 },
-    { id: 'name', field: 'Name', x: 8.7, y: 1.8, w: 20.5, h: 12.5, fontSizePt: 29 },
-    { id: 'location', field: 'LocationBox', x: 8.7, y: 14.3, w: 33, h: 4.5, fontSizePt: 10.5 },
-  ]),
-  STORAGE24: JSON.stringify([
-    { id: 'id-1', field: 'Identifier', x: 2, y: 2, w: 20, h: 8, fontSizePt: 18 },
-    { id: 'id-2', field: 'Type', x: 2, y: 10, w: 20, h: 6, fontSizePt: 10 },
-    { id: 'id-3', field: 'Comment', x: 2, y: 17, w: 31, h: 6, fontSizePt: 7 },
-    { id: 'id-4', field: 'QR Code', x: 23, y: 2, w: 10, h: 10, fontSizePt: 0 },
-  ]),
-  // MasterPacker specific layouts
-  MP_ITEM_MM24: JSON.stringify([
-    { id: 'qr', field: 'QR Code', x: 29.3, y: 1.8, w: 12.5, h: 12.5, fontSizePt: 12.5 },
-    { id: 'name', field: 'Name', x: 8.7, y: 1.8, w: 20.5, h: 12.5, fontSizePt: 20 },
-    { id: 'tags', field: 'Tags', x: 8.7, y: 14.3, w: 33, h: 4.5, fontSizePt: 8 },
-  ]),
-  MP_BOX_MM24: JSON.stringify([
-    { id: 'qr', field: 'QR Code', x: 29.3, y: 1.8, w: 12.5, h: 12.5, fontSizePt: 12.5 },
-    { id: 'name', field: 'Name', x: 8.7, y: 1.8, w: 20.5, h: 8, fontSizePt: 20 },
-    { id: 'count', field: 'ItemCount', x: 8.7, y: 9.8, w: 20.5, h: 4.5, fontSizePt: 10 },
-    { id: 'tags', field: 'Tags', x: 8.7, y: 14.3, w: 33, h: 4.5, fontSizePt: 8 },
-  ]),
-};
-
-const DEFAULT_WIDTHS = {
-  GRID12: 35,
-  MM12: 35,
-  MM24: 50,
-  STORAGE24: 35,
-  MP_ITEM_MM24: 50,
-  MP_BOX_MM24: 50,
-};
 
 // Font configuration
 const FONT_CONFIG = {
@@ -169,9 +145,9 @@ export async function createQrDataUrl(url: string): Promise<string> {
 export async function renderItemLabelToPng(
   item: any,
   layoutName: string = 'MP_ITEM_MM24',
-  options: { widthMm?: number; heightMm?: number; qrUrl: string; baseUrl?: string } = { qrUrl: '', baseUrl: '' }
+  options: { widthMm?: number; heightMm?: number; qrUrl: string; baseUrl?: string; layoutJson?: string } = { qrUrl: '', baseUrl: '' }
 ): Promise<Buffer> {
-  const layoutJson = DEFAULT_LAYOUTS[layoutName as keyof typeof DEFAULT_LAYOUTS] || DEFAULT_LAYOUTS.MP_ITEM_MM24;
+  const layoutJson = options.layoutJson || DEFAULT_LAYOUTS[layoutName as keyof typeof DEFAULT_LAYOUTS] || DEFAULT_LAYOUTS.MP_ITEM_MM24;
   const { widthMm = 50, heightMm = 25, qrUrl } = options;
 
   const width = widthMm * MM_TO_PX;
@@ -257,9 +233,9 @@ export async function renderItemLabelToPng(
 export async function renderBoxLabelToPng(
   box: any,
   layoutName: string = 'MP_BOX_MM24',
-  options: { widthMm?: number; heightMm?: number; qrUrl: string; baseUrl?: string } = { qrUrl: '', baseUrl: '' }
+  options: { widthMm?: number; heightMm?: number; qrUrl: string; baseUrl?: string; layoutJson?: string } = { qrUrl: '', baseUrl: '' }
 ): Promise<Buffer> {
-  const layoutJson = DEFAULT_LAYOUTS[layoutName as keyof typeof DEFAULT_LAYOUTS] || DEFAULT_LAYOUTS.MP_BOX_MM24;
+  const layoutJson = options.layoutJson || DEFAULT_LAYOUTS[layoutName as keyof typeof DEFAULT_LAYOUTS] || DEFAULT_LAYOUTS.MP_BOX_MM24;
   const { widthMm = 50, heightMm = 25, qrUrl } = options;
 
   const width = widthMm * MM_TO_PX;
@@ -344,9 +320,10 @@ export async function renderBoxLabelToPng(
 
 export async function renderLabelStripToPng(
   items: { item: any; layoutJson: string; qrUrl: string; widthMm: number }[],
-  options: { heightMm: number; gapMm: number }
+  options: { heightMm: number; gapMm: number; kind?: 'item' | 'box' }
 ): Promise<Buffer> {
-  const { heightMm, gapMm } = options;
+  const { heightMm, gapMm, kind = 'item' } = options;
+  const resolveText = kind === 'box' ? resolveBoxText : resolveItemText;
 
   const itemsCount = items.length;
   if (itemsCount === 0) throw new Error('No items to render');
@@ -423,7 +400,7 @@ export async function renderLabelStripToPng(
                 },
               });
             } else {
-              const text = resolveItemText(item, el.field);
+              const text = resolveText(item, el.field);
 
               flatChildren.push({
                 type: 'div',
@@ -469,5 +446,3 @@ export async function renderLabelStripToPng(
 
   return resvg.render().asPng();
 }
-
-export { DEFAULT_LAYOUTS, DEFAULT_WIDTHS };

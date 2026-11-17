@@ -7,12 +7,7 @@ const nextConfig: NextConfig = {
     agentUpgrade: "security",
   },
   turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
+    root: __dirname,
   },
 };
 

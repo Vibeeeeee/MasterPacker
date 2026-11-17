@@ -93,15 +93,17 @@ export async function logout() {
 }
 
 export async function getAppConfig() {
-  return prisma.appConfig.upsert({
-    where: { id: 'default' },
-    create: {
+  // Read-first: an upsert on every request would write the SQLite file,
+  // which Turbopack (dev) treats as a file change and hot-reloads the page.
+  const existing = await prisma.appConfig.findUnique({ where: { id: 'default' } });
+  if (existing) return existing;
+  return prisma.appConfig.create({
+    data: {
       id: 'default',
       autoSnapshotInterval: 24,
       maxSnapshots: 30,
       readOnlyMode: false,
       theme: 'system',
     },
-    update: {},
   });
 }
