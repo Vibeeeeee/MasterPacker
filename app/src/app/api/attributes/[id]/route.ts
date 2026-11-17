@@ -58,7 +58,7 @@ export async function PUT(
     // Check if attribute with same name exists (excluding current)
     const existingAttribute = await prisma.attribute.findFirst({
       where: {
-        name: { equals: name, mode: 'insensitive' },
+        name: { equals: name },
         id: { not: id },
       },
     });

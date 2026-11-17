@@ -13,7 +13,7 @@ export default function EditTagPage({ params }: { params: Promise<{ id: string }
   const [name, setName] = useState('');
   const [color, setColor] = useState('#808080');
   const [tagClassId, setTagClassId] = useState('');
-  const [tagClasses, setTagClasses] = useState([]);
+  const [tagClasses, setTagClasses] = useState<any[]>([]);
 
   useEffect(() => {
     Promise.all([params]).then(([p]) => {

@@ -8,14 +8,11 @@ export async function GET(req: NextRequest) {
     const includeUsage = searchParams.get('includeUsage') === 'true';
 
     const tags = await prisma.tag.findMany({
-      include: {
-        tagClass: true,
-        itemTags: includeUsage ? { select: { itemId: true } } : false,
-        boxTags: includeUsage ? { select: { boxId: true } } : false,
-      },
+      include: includeUsage
+        ? { tagClass: true, itemTags: { select: { itemId: true } }, boxTags: { select: { boxId: true } } }
+        : { tagClass: true },
       orderBy: [
         { tagClass: { order: 'asc' } },
-        { order: 'asc' },
         { name: 'asc' },
       ],
     });
@@ -23,7 +20,7 @@ export async function GET(req: NextRequest) {
     if (includeUsage) {
       const tagsWithUsage = tags.map(tag => ({
         ...tag,
-        usageCount: tag.itemTags.length + tag.boxTags.length,
+        usageCount: (tag as any).itemTags.length + (tag as any).boxTags.length,
       }));
       return NextResponse.json({ tags: tagsWithUsage });
     }
@@ -57,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     // Check if tag with same name exists
     const existingTag = await prisma.tag.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
+      where: { name: { equals: name } },
     });
 
     if (existingTag) {

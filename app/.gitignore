@@ -45,3 +45,6 @@ logs
 
 # Test
 coverage
+
+# Database (schema-relative)
+prisma/data/
