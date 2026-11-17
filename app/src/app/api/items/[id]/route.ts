@@ -31,6 +31,9 @@ export async function GET(
         pictures: {
           orderBy: { order: 'asc' },
         },
+        links: {
+          orderBy: { order: 'asc' },
+        },
         boxItems: {
           include: {
             box: {
@@ -47,7 +50,25 @@ export async function GET(
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ item });
+    // Related items: share at least one tag
+    const tagIds = item.tags.map((t: any) => t.tagId);
+    let relatedItems: any[] = [];
+    if (tagIds.length > 0) {
+      relatedItems = await prisma.item.findMany({
+        where: {
+          id: { not: id },
+          tags: { some: { tagId: { in: tagIds } } },
+        },
+        include: {
+          tags: { include: { tag: true } },
+          pictures: { orderBy: { order: 'asc' } },
+        },
+        take: 6,
+        orderBy: { name: 'asc' },
+      });
+    }
+
+    return NextResponse.json({ item, relatedItems });
   } catch (error) {
     console.error('Error fetching item:', error);
     return NextResponse.json(
@@ -123,6 +144,9 @@ export async function PUT(
           },
         },
         pictures: {
+          orderBy: { order: 'asc' },
+        },
+        links: {
           orderBy: { order: 'asc' },
         },
         boxItems: {

@@ -5,8 +5,8 @@ import Link from 'next/link';
 import Header from '@/components/ui/Header';
 
 export default function TagsPage() {
-  const [tags, setTags] = useState([]);
-  const [tagClasses, setTagClasses] = useState([]);
+  const [tags, setTags] = useState<any[]>([]);
+  const [tagClasses, setTagClasses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');

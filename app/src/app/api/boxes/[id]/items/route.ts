@@ -74,7 +74,7 @@ export async function POST(
     if (existingBoxItem) {
       // Update quantity
       await prisma.boxItem.update({
-        where: { id: existingBoxItem.id },
+        where: { boxId_itemId: { boxId: existingBoxItem.boxId, itemId: existingBoxItem.itemId } },
         data: { quantity: existingBoxItem.quantity + quantity },
       });
     } else {

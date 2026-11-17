@@ -1,25 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/ui/Header';
-import { useThemeContext } from '@/components/ThemeProvider';
 
 export default function HomePage() {
-  const router = useRouter();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState([]);
-  const { resolvedTheme } = useThemeContext();
-
-  useEffect(() => {
-    fetchItems();
-    fetchTags();
-  }, []);
 
   const fetchItems = async () => {
     try {
@@ -45,51 +36,80 @@ export default function HomePage() {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      await fetchItems();
+      await fetchTags();
+    })();
+  }, []);
+
+  const toggleTag = (tagId: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
+    );
+  };
+
   const filteredItems = items.filter((item: any) => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.description || '').toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTags = selectedTags.length === 0 || 
+    const matchesTags = selectedTags.length === 0 ||
       item.tags.some((tag: any) => selectedTags.includes(tag.tag.id));
     return matchesSearch && matchesTags;
   });
 
+  const pictureSrc = (item: any) => {
+    const pic = (item.pictures || [])[0];
+    if (!pic) return null;
+    const base64 = typeof pic.data === 'string'
+      ? pic.data
+      : btoa(String.fromCharCode(...new Uint8Array(pic.data)));
+    return `data:${pic.mimeType};base64,${base64}`;
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Items</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Manage all your items with tags, attributes, and box assignments
-            </p>
-          </div>
-          
-          <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-            <Link
-              href="/items/new"
-              className="btn btn-primary btn-sm"
-            >
+
+      {/* Hero */}
+      <section className="topo-bg border-b" style={{ borderColor: 'var(--paper-200)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: 'var(--forest-500)' }}>
+            Base camp · Inventory
+          </p>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--ink-900)' }}>
+            Everything you own,
+            <br />
+            <span style={{ color: 'var(--forest-600)' }}>ready for the trail.</span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-base" style={{ color: 'var(--ink-500)' }}>
+            Track your gear, organize storage boxes, and pack for trips with a visual packing board.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/items/new" className="btn btn-primary">
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Add Item
             </Link>
+            <Link href="/trips" className="btn btn-accent">
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8l-1-1H5a2 2 0 00-2 2zm9-12v4" />
+              </svg>
+              Plan a Trip
+            </Link>
           </div>
         </div>
+      </section>
 
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filter Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
+        <div className="card mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label htmlFor="search" className="sr-only">
-                Search
-              </label>
+              <label htmlFor="search" className="sr-only">Search</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5" style={{ color: 'var(--ink-400)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -98,99 +118,75 @@ export default function HomePage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search items..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Search your gear..."
+                  className="pl-10"
                 />
               </div>
             </div>
-
-            <div className="flex-1">
-              <label htmlFor="tags" className="sr-only">
-                Filter by tags
-              </label>
-              <select
-                id="tags"
-                multiple
-                value={selectedTags}
-                onChange={(e) => {
-                  const selected = Array.from(e.target.selectedOptions, option => option.value);
-                  setSelectedTags(selected);
-                }}
-                className="block w-full py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              >
-                {tags.map((tag: any) => (
-                  <option key={tag.id} value={tag.id} className="dark:bg-gray-800">
-                    {tag.name}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
-          {/* Tag filters display */}
-          {selectedTags.length > 0 && (
+          {/* Tag filter chips */}
+          {tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {selectedTags.map((tagId) => {
-                const tag = tags.find((t: any) => t.id === tagId);
-                return tag ? (
-                  <span
-                    key={tagId}
-                    className="badge bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200"
+              {tags.map((tag: any) => {
+                const active = selectedTags.includes(tag.id);
+                return (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => toggleTag(tag.id)}
+                    className="badge transition-all"
+                    style={{
+                      backgroundColor: active ? tag.color : tag.color + '22',
+                      color: active ? '#fff' : tag.color,
+                      boxShadow: active ? `0 0 0 2px ${tag.color}` : 'none',
+                    }}
                   >
                     {tag.name}
-                    <button
-                      onClick={() => setSelectedTags(selectedTags.filter(id => id !== tagId))}
-                      className="ml-1 hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ) : null;
+                  </button>
+                );
               })}
-              <button
-                onClick={() => setSelectedTags([])}
-                className="badge bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                Clear all
-              </button>
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={() => setSelectedTags([])}
+                  className="badge badge-default"
+                >
+                  Clear all
+                </button>
+              )}
             </div>
           )}
         </div>
 
         {/* Loading */}
         {loading && (
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading items...</p>
+          <div className="text-center py-12">
+            <div
+              className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2"
+              style={{ borderColor: 'var(--forest-500)', borderTopColor: 'transparent' }}
+            />
+            <p className="mt-2 text-sm" style={{ color: 'var(--ink-500)' }}>Loading items...</p>
           </div>
         )}
 
         {/* Error */}
         {error && !loading && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
             {error}
-            <button
-              onClick={fetchItems}
-              className="ml-4 text-red-600 dark:text-red-400 hover:underline"
-            >
-              Retry
-            </button>
+            <button onClick={fetchItems} className="ml-4 underline">Retry</button>
           </div>
         )}
 
-        {/* Items Table */}
+        {/* Items Grid */}
         {!loading && !error && filteredItems.length === 0 && (
-          <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <p className="text-gray-500 dark:text-gray-400">No items found</p>
+          <div className="card text-center py-12">
+            <p style={{ color: 'var(--ink-500)' }}>No items found</p>
             {searchQuery || selectedTags.length > 0 ? (
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-sm mt-1" style={{ color: 'var(--ink-400)' }}>
                 Try adjusting your search or filters
               </p>
             ) : (
-              <Link
-                href="/items/new"
-                className="inline-block mt-4 btn btn-primary btn-sm"
-              >
+              <Link href="/items/new" className="inline-block mt-4 btn btn-primary btn-sm">
                 Add your first item
               </Link>
             )}
@@ -198,138 +194,55 @@ export default function HomePage() {
         )}
 
         {!loading && !error && filteredItems.length > 0 && (
-          <div className="table-container">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Tags</th>
-                  <th>Boxes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredItems.map((item: any) => (
-                  <tr key={item.id}>
-                    <td className="font-medium">
-                      <Link
-                        href={`/items/${item.id}`}
-                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td className="text-gray-600 dark:text-gray-400">
-                      {item.description || '-'}
-                    </td>
-                    <td>
-                      <div className="flex flex-wrap gap-1">
-                        {item.tags.slice(0, 3).map((tag: any) => (
-                          <span
-                            key={tag.tag.id}
-                            className="badge badge-default"
-                            style={{ backgroundColor: tag.tag.color + '20', color: tag.tag.color }}
-                          >
-                            {tag.tag.name}
-                          </span>
-                        ))}
-                        {item.tags.length > 3 && (
-                          <span className="badge badge-default">+{item.tags.length - 3}</span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      {item.boxItems.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {item.boxItems.slice(0, 2).map((boxItem: any) => (
-                            <Link
-                              key={boxItem.boxId}
-                              href={`/boxes/${boxItem.boxId}`}
-                              className="badge badge-default hover:bg-blue-100 dark:hover:bg-blue-900/30"
-                            >
-                              {boxItem.box.name}
-                            </Link>
-                          ))}
-                          {item.boxItems.length > 2 && (
-                            <span className="badge badge-default">+{item.boxItems.length - 2}</span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-gray-400 dark:text-gray-500">-</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredItems.map((item: any) => {
+              const src = pictureSrc(item);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/items/${item.id}`}
+                  className="card group hover:shadow-md transition-all overflow-hidden !p-0"
+                >
+                  <div
+                    className="h-40 w-full flex items-center justify-center"
+                    style={{ background: 'var(--forest-100)' }}
+                  >
+                    {src ? (
+                      <img src={src} alt={item.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <svg className="w-10 h-10" style={{ color: 'var(--forest-400)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold truncate" style={{ color: 'var(--ink-900)' }}>
+                      {item.name}
+                    </h3>
+                    <p className="text-sm mt-1 line-clamp-2 min-h-[2.5rem]" style={{ color: 'var(--ink-500)' }}>
+                      {item.description || 'No description'}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {item.tags.slice(0, 3).map((tag: any) => (
+                        <span
+                          key={tag.tag.id}
+                          className="badge"
+                          style={{ backgroundColor: tag.tag.color + '22', color: tag.tag.color }}
+                        >
+                          {tag.tag.name}
+                        </span>
+                      ))}
+                      {item.tags.length > 3 && (
+                        <span className="badge badge-default">+{item.tags.length - 3}</span>
                       )}
-                    </td>
-                    <td>
-                      <div className="flex items-center space-x-2">
-                        <Link
-                          href={`/items/${item.id}`}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                        >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </Link>
-                        <Link
-                          href={`/items/${item.id}/edit`}
-                          className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-                        >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </main>
-
-      {/* Mobile Navigation */}
-      <div className="mobile-nav">
-        <div className="flex justify-around">
-          <Link
-            href="/"
-            className="flex flex-col items-center py-2 text-blue-600"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-            <span className="text-xs mt-1">Items</span>
-          </Link>
-          <Link
-            href="/boxes"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
-            <span className="text-xs mt-1">Boxes</span>
-          </Link>
-          <Link
-            href="/tags"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8V7a4 4 0 014-4z" />
-            </svg>
-            <span className="text-xs mt-1">Tags</span>
-          </Link>
-          <Link
-            href="/settings"
-            className="flex flex-col items-center py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span className="text-xs mt-1">Settings</span>
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

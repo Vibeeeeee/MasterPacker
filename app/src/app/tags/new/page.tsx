@@ -10,7 +10,7 @@ export default function NewTagPage() {
   const [name, setName] = useState('');
   const [color, setColor] = useState('#808080');
   const [tagClassId, setTagClassId] = useState('');
-  const [tagClasses, setTagClasses] = useState([]);
+  const [tagClasses, setTagClasses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
